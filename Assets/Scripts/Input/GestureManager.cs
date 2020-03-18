@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,6 +140,8 @@ public class GestureManager : MonoBehaviour {
     Dictionary<int, FingerTouch> fingerTouches = new Dictionary<int, FingerTouch>();
     public List<MonoBehaviour> receivers = new List<MonoBehaviour>();
 
+    public Text log;
+
     Collider[] collidersTouched;
 
     bool SendGesture(Gesture gesture)
@@ -153,12 +156,13 @@ public class GestureManager : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start ()
+    {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         RecordPatterns();
         List<FingerTouch> drags = GetValidDrags();
         DetectTap();
@@ -166,15 +170,15 @@ public class GestureManager : MonoBehaviour {
         DetectDoubleDrag(drags);
         DetectSwipe(drags);
         DetectPinch(drags);
-        /*if (log != null)
+        if (log != null)
         {
             LogTouches();
-        }*/
+        }
 	}
 
     void LogTouches()
     {
-        /*string log = "Log: (" + fingerTouches.Values.Count + " touches)\n";
+        string log = "Log: (" + fingerTouches.Values.Count + " touches)\n";
         foreach (FingerTouch touch in fingerTouches.Values)
         {
             log += "ID: " + touch.fingerID + "\n";
@@ -182,12 +186,12 @@ public class GestureManager : MonoBehaviour {
             log += "Delta: " + touch.NormalizedDelta + "\n";
             log += "Ended: " + touch.ended + "\n";
         }
-        this.log.text = log;*/
+        this.log.text = log;
     }
 
     void DetectSwipe(List<FingerTouch> drags)
     {
-    #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
+#if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
             if (drags.Count == 1)
             {
                 // El toque debe estar terminado
@@ -196,18 +200,19 @@ public class GestureManager : MonoBehaviour {
                     SendGesture(new Gesture(GestureType.Swipe, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drags[0].colliders));
                 }
             }
-    #elif UNITY_STANDALONE
+#endif
+#if UNITY_STANDALONE || UNITY_EDITOR
             foreach (FingerTouch drag in drags)
             {
                 if (drag.fingerID == 0)
-                    SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                    SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime,drag.colliders));
                 if (drag.fingerID == 1)
-                    SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                    SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime,drag.colliders));
                 if (drag.fingerID == 2)
-                    SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                    SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime,drag.colliders));
             }
-    #endif
-        }
+#endif
+    }
 
     void DetectTap()
     {
@@ -221,7 +226,7 @@ public class GestureManager : MonoBehaviour {
                 {
                     #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
                     SendGesture(new Gesture(GestureType.Tap, touch.position, Time.time - touch.startTime, touch.colliders));
-                    #elif UNITY_STANDALONE
+                    #else
                     if (touch.fingerID == 0)
                         SendGesture(new Gesture(GestureType.LeftMouseTap, touch.position, touch.colliders));
                     if (touch.fingerID == 1)
@@ -253,7 +258,7 @@ public class GestureManager : MonoBehaviour {
 
     void DetectDrag(List<FingerTouch> drags)
     {
-        #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
+#if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
         if (drags.Count == 1)
         {
             SendGesture(new Gesture(GestureType.Drag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drags[0].colliders));
@@ -263,22 +268,23 @@ public class GestureManager : MonoBehaviour {
             if (drags[0].NormalizedTravel.y > minDragScreenTravel)
                 SendGesture(new Gesture(GestureType.VerticalDrag, drags[0].position, new Vector2(0, drags[0].NormalizedDelta.y), Time.time - drags[0].startTime, drags[1].colliders));
         }
-        #elif UNITY_STANDALONE
+#endif
+#if UNITY_STANDALONE || UNITY_EDITOR
         foreach (FingerTouch drag in drags)
         {
             if (drag.fingerID == 0)
-                SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
             if (drag.fingerID == 1)
-                SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
             if (drag.fingerID == 2)
-                SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, drag.colliders));
+                SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
         }
-        #endif
+#endif
     }
 
     void DetectDoubleDrag(List<FingerTouch> drags)
     {
-        #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
+#if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
         if (drags.Count == 2)
         {
             // Comprobar si el ángulo entre los dos vectores es inferior al mínimo establecido
@@ -289,13 +295,13 @@ public class GestureManager : MonoBehaviour {
                 SendGesture(new Gesture(GestureType.DoubleDrag, meanPosition, meanNormalizedDelta, Time.time - drags[0].startTime, drags[0].colliders));
             }
         }
-        #endif
+#endif
     }
 
     void DetectPinch(List<FingerTouch> drags)
     {
         
-        #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
+#if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
         if (drags.Count == 2)
         {
             // Comprobar si el ángulo entre los dos vectores es superior al máximo establecido para que sean opuestos
@@ -305,22 +311,24 @@ public class GestureManager : MonoBehaviour {
                 SendGesture(new Gesture(GestureType.Pinch, drags[0].position, drags[0].NormalizedDelta, drags[1].position, drags[1].NormalizedDelta, Time.time - startTime, new Collider[0]));
             }
         }
-        #elif UNITY_STANDALONE
+#endif
+#if UNITY_STANDALONE || UNITY_EDITOR
         // Wheel back
         if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), new Collider[0]));
+            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
         }
         // Wheel forward
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), new Collider[0]));
+            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
         }
-        #endif
+#endif
     }
 
     void RecordPatterns()
     {
+        
         // Eliminar del diccionario los toques marcados como finalizados
         List<int> itemsToRemove = new List<int>();
         foreach (var pair in fingerTouches)
@@ -333,7 +341,7 @@ public class GestureManager : MonoBehaviour {
             fingerTouches.Remove(item);
         }
 
-        #if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
+#if UNITY_IPHONE || UNITY_ANDROID || UNITY_WP8
         // Detectar toques, utilizado los eventos táctiles de Unity        
         foreach (Touch touch in Input.touches)
         {
@@ -369,7 +377,9 @@ public class GestureManager : MonoBehaviour {
                 fingerTouches[touch.fingerId] = new FingerTouch(touch.fingerId, touch.position);
             }
         }
-        #elif UNITY_STANDALONE
+#endif
+
+#if UNITY_STANDALONE || UNITY_EDITOR
         for (int touchID = 0; touchID < 3; touchID++)
         {
             // Si pulsamos el ratón por primera vez, se añade
@@ -389,7 +399,7 @@ public class GestureManager : MonoBehaviour {
             {
                 fingerTouches[touchID].MoveFinger(Input.mousePosition);
             }
-        }
-        #endif
+        }  
+#endif
     }
 }
