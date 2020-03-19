@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class DataManager : MonoBehaviour
+public class DataManager
 {
     public enum Market
     {
@@ -48,16 +48,6 @@ public class DataManager : MonoBehaviour
 
     public static bool IsHappyHour;
     public static DateTime happyHourTime;
-    
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public static void EnableDoublePaper()
     {

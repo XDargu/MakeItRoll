@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: eb2088e448003764b96283e8a6bea72b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - rollSprite: {fileID: 21300000, guid: f78f07245ee473949bfb85a12eee6f81, type: 3}
+  - sideSprite: {fileID: 21300000, guid: 0ff0ccebdb9a588409d82f9d73cd1fd4, type: 3}
+  - cont: {instanceID: 0}
+  - end: {instanceID: 0}
+  - init: {instanceID: 0}
+  - goldenRollSprite: {instanceID: 0}
+  - goldenSideSprite: {instanceID: 0}
+  - goldenCont: {instanceID: 0}
+  - goldenEnd: {instanceID: 0}
+  - goldenInit: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

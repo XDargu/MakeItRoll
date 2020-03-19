@@ -8,6 +8,7 @@ public class DataLoader : MonoBehaviour {
         DataManager.LoadMeters();
         DataManager.LoadStoreItems();
         DataManager.LoadUpgrades();
+        DataManager.UpdateRollData();
         DataManager.UpdateStoreItemsMPS();
         DataManager.UpdateStoreItemsPrice();
         DataManager.UpdateTotalMPS();
