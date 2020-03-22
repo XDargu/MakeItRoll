@@ -266,18 +266,21 @@ public class GestureManager : MonoBehaviour {
             if (drags[0].NormalizedTravel.x > minDragScreenTravel)
                 SendGesture(new Gesture(GestureType.HoriztonalDrag, drags[0].position, new Vector2(drags[0].NormalizedDelta.x, 0), Time.time - drags[0].startTime, drags[0].colliders));
             if (drags[0].NormalizedTravel.y > minDragScreenTravel)
-                SendGesture(new Gesture(GestureType.VerticalDrag, drags[0].position, new Vector2(0, drags[0].NormalizedDelta.y), Time.time - drags[0].startTime, drags[1].colliders));
+                SendGesture(new Gesture(GestureType.VerticalDrag, drags[0].position, new Vector2(0, drags[0].NormalizedDelta.y), Time.time - drags[0].startTime, drags[0].colliders));
         }
 #endif
 #if UNITY_STANDALONE || UNITY_EDITOR
-        foreach (FingerTouch drag in drags)
+        if (drags.Count > 0)
         {
-            if (drag.fingerID == 0)
-                SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
-            if (drag.fingerID == 1)
-                SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
-            if (drag.fingerID == 2)
-                SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
+            foreach (FingerTouch drag in drags)
+            {
+                if (drag.fingerID == 0)
+                    SendGesture(new Gesture(GestureType.LeftMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
+                if (drag.fingerID == 1)
+                    SendGesture(new Gesture(GestureType.RightMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
+                if (drag.fingerID == 2)
+                    SendGesture(new Gesture(GestureType.MiddleMouseDrag, drags[0].position, drags[0].NormalizedDelta, Time.time - drags[0].startTime, drag.colliders));
+            }
         }
 #endif
     }
@@ -314,14 +317,17 @@ public class GestureManager : MonoBehaviour {
 #endif
 #if UNITY_STANDALONE || UNITY_EDITOR
         // Wheel back
-        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        if (drags.Count > 0)
         {
-            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
-        }
-        // Wheel forward
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
-        {
-            SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
+            }
+            // Wheel forward
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                SendGesture(new Gesture(GestureType.MouseWheel, Input.mousePosition, new Vector2(Input.GetAxis("Mouse ScrollWheel"), 0), Time.time - drags[0].startTime, new Collider[0]));
+            }
         }
 #endif
     }

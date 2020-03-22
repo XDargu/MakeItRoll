@@ -3,8 +3,8 @@ using System.Collections;
 
 public class DataLoader : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    void Awake()
+    {
         DataManager.LoadMeters();
         DataManager.LoadStoreItems();
         DataManager.LoadUpgrades();
@@ -12,6 +12,11 @@ public class DataLoader : MonoBehaviour {
         DataManager.UpdateStoreItemsMPS();
         DataManager.UpdateStoreItemsPrice();
         DataManager.UpdateTotalMPS();
+    }
+
+	// Use this for initialization
+	void Start () {
+        
 	}
 	
 	// Update is called once per frame
