@@ -68,42 +68,45 @@ public class WCControl : MonoBehaviour {
 
     public void OnGesture(Gesture gesture)
     {
-        if (gesture.type == GestureType.Tap)
+        if (DataManager.InGame)
         {
-            Bounds myBounds = Utils.GetRectTransformBounds(mRectTransform);
-
-            if (myBounds.Contains(gesture.position))
+            if (gesture.type == GestureType.Tap)
             {
-                GetComponent<AudioSource>().PlayOneShot(flushSound);
-                statsManager.ResetFill(true);
-            }
-        }
-        else if (gesture.type == GestureType.Drag)
-        {
-            Bounds myBounds = Utils.GetRectTransformBounds(mRectTransform);
+                Bounds myBounds = Utils.GetRectTransformBounds(mRectTransform);
 
-            if (myBounds.Contains(gesture.position))
-            {
-                if (gesture.delta.y < 0)
+                if (myBounds.Contains(gesture.position))
                 {
-                    // Abajo
-                    if (DataManager.WCOpen)
-                    {
-                        mImage.sprite = toiletClosed;
-                        PlayerPrefs.SetInt("WCOpen", 0);
-                        GetComponent<AudioSource>().PlayOneShot(closeSound);
-                        DataManager.WCOpen = false;
-                    }
+                    GetComponent<AudioSource>().PlayOneShot(flushSound);
+                    statsManager.ResetFill(true);
                 }
-                else
+            }
+            else if (gesture.type == GestureType.Drag)
+            {
+                Bounds myBounds = Utils.GetRectTransformBounds(mRectTransform);
+
+                if (myBounds.Contains(gesture.position))
                 {
-                    // Arriba
-                    if (!DataManager.WCOpen)
+                    if (gesture.delta.y < 0)
                     {
-                        mImage.sprite = toiletOpen;
-                        PlayerPrefs.SetInt("WCOpen", 1);
-                        GetComponent<AudioSource>().PlayOneShot(openSound);
-                        DataManager.WCOpen = true;
+                        // Abajo
+                        if (DataManager.WCOpen)
+                        {
+                            mImage.sprite = toiletClosed;
+                            PlayerPrefs.SetInt("WCOpen", 0);
+                            GetComponent<AudioSource>().PlayOneShot(closeSound);
+                            DataManager.WCOpen = false;
+                        }
+                    }
+                    else
+                    {
+                        // Arriba
+                        if (!DataManager.WCOpen)
+                        {
+                            mImage.sprite = toiletOpen;
+                            PlayerPrefs.SetInt("WCOpen", 1);
+                            GetComponent<AudioSource>().PlayOneShot(openSound);
+                            DataManager.WCOpen = true;
+                        }
                     }
                 }
             }

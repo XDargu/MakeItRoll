@@ -59,13 +59,16 @@ public class TabControl : MonoBehaviour
 
     void Awake()
     {
-        closedPosition = new Vector2(0, Screen.height);
+        Canvas canvas = FindObjectOfType<Canvas>();
+        float canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+
+        closedPosition = new Vector2(0, canvasHeight);
         openedPosition = new Vector2(0, 0);
 
         m_AudioSource = GetComponent<AudioSource>();
 
         m_RectTransform = GetComponent<RectTransform>();
-        m_RectTransform.sizeDelta = new Vector2(m_RectTransform.sizeDelta.x, Screen.height);
+        m_RectTransform.sizeDelta = new Vector2(m_RectTransform.sizeDelta.x, canvasHeight);
         m_RectTransform.anchoredPosition = closedPosition;
     }
 
@@ -89,13 +92,16 @@ public class TabControl : MonoBehaviour
         }
     }
 
-    void ResetIconsAndPanels()
+    void ResetIcons()
     {
         shop.sprite = shopSprite;
         upgrades.sprite = upgradesSprite;
         stats.sprite = statsSprite;
         extra.sprite = extraSprite;
+    }
 
+    void ResetPanels()
+    {
         shopPanel.gameObject.SetActive(false);
         upgradesPanel.gameObject.SetActive(false);
         statsPanel.gameObject.SetActive(false);
@@ -132,6 +138,8 @@ public class TabControl : MonoBehaviour
     {
         if (currentView != view)
         {
+            ResetIcons();
+
             if (view == EView.GAME)
             {
                 sourceTabsPosition = m_RectTransform.anchoredPosition;
@@ -140,7 +148,7 @@ public class TabControl : MonoBehaviour
             }
             else
             {
-                ResetIconsAndPanels();
+                ResetPanels();
                 SetViewIconAndPanel(view);
 
                 sourceTabsPosition = m_RectTransform.anchoredPosition;
