@@ -49,6 +49,12 @@ public class TabControl : MonoBehaviour
     [Header("Layout")]
     public float marginBotton = 100.0f;
 
+    [Header("Other controls")]
+    public Text metersText;
+    public Text metersPerSecondText;
+    public Color metersColorGameplay;
+    public Color metersColorStore;
+
     float animationCurveTime;
 
     RectTransform m_RectTransform;
@@ -148,6 +154,9 @@ public class TabControl : MonoBehaviour
                 sourceTabsPosition = m_RectTransform.anchoredPosition;
                 targetTabsPosition = closedPosition;
                 DataManager.InGame = true;
+
+                metersPerSecondText.color = metersColorGameplay;
+                metersText.color = metersColorGameplay;
             }
             else
             {
@@ -158,6 +167,9 @@ public class TabControl : MonoBehaviour
                 targetTabsPosition = openedPosition;
 
                 DataManager.InGame = false;
+
+                metersPerSecondText.color = metersColorStore;
+                metersText.color = metersColorStore;
             }
 
             animationCurveTime = transitionTime;
