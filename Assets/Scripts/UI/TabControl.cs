@@ -46,6 +46,9 @@ public class TabControl : MonoBehaviour
     public AnimationCurve tabAnimationCurve;
     public float transitionTime = 2.0f;
 
+    [Header("Layout")]
+    public float marginBotton = 100.0f;
+
     float animationCurveTime;
 
     RectTransform m_RectTransform;
@@ -60,7 +63,7 @@ public class TabControl : MonoBehaviour
     void Awake()
     {
         Canvas canvas = FindObjectOfType<Canvas>();
-        float canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+        float canvasHeight = canvas.GetComponent<RectTransform>().rect.height - marginBotton;
 
         closedPosition = new Vector2(0, canvasHeight);
         openedPosition = new Vector2(0, 0);

@@ -23,8 +23,6 @@ namespace CompleteProject
 		// when defining the Product Identifiers on the store. Except, for illustration purposes, the 
 		// kProductIDSubscription - it has custom Apple and Google identifiers. We declare their store-
 		// specific mapping to Unity Purchasing's AddProduct, below.
-		public static string kConsumableDoubleMeters = "consumable_double_meters";
-		public static string kConsumableDoubleMetersGoogleName = "double_meters";
 
         public GameObject targetUI;
         public InAppProductItem storeItemPrefab;
@@ -53,9 +51,12 @@ namespace CompleteProject
 
 			// Add a product to sell / restore by way of its identifier, associating the general identifier
 			// with its store-specific identifiers.
-			builder.AddProduct(kConsumableDoubleMeters, ProductType.Consumable, new IDs(){
-				{ kConsumableDoubleMetersGoogleName, GooglePlay.Name },
+            foreach (DataManager.InAppProduct product in DataManager.inAppProducts)
+            {
+                builder.AddProduct(product.ID, ProductType.Consumable, new IDs(){
+				{ product.ID, GooglePlay.Name },
 			});
+            }
 
 			// Kick off the remainder of the set-up with an asynchrounous call, passing the configuration 
 			// and this class' instance. Expect a response either in OnInitialized or OnInitializeFailed.
@@ -68,15 +69,6 @@ namespace CompleteProject
 			// Only say we are initialized if both the Purchasing references are set.
 			return m_StoreController != null && m_StoreExtensionProvider != null;
 		}
-
-
-		public void BuyConsumable()
-		{
-			// Buy the consumable product using its general identifier. Expect a response either 
-			// through ProcessPurchase or OnPurchaseFailed asynchronously.
-			BuyProductID(kConsumableDoubleMeters);
-		}
-
 
 		void BuyProductID(string productId)
 		{
@@ -159,7 +151,7 @@ namespace CompleteProject
 		public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
 		{
 			// A consumable product has been purchased by this user.
-			if (String.Equals(args.purchasedProduct.definition.id, kConsumableDoubleMeters, StringComparison.Ordinal))
+            if (String.Equals(args.purchasedProduct.definition.id, "double_paper", StringComparison.Ordinal))
 			{
 				Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
 				// The consumable item has been successfully purchased, add 100 coins to the player's in-game score.

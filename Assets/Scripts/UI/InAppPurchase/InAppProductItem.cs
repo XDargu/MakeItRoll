@@ -24,6 +24,12 @@ public class InAppProductItem : MonoBehaviour
         m_PurchaseCallback = purchaseCallback;
 
         buyButton.interactable = p.availableToPurchase;
+
+        DataManager.InAppProduct dataProduct = DataManager.GetInAppProductByID(m_ProductID);
+        if (dataProduct.IsValid())
+        {
+            icon.sprite = Resources.Load<Sprite>("InAppPurchases/" + dataProduct.icon);
+        }
     }
 
     // Start is called before the first frame update

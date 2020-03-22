@@ -86,13 +86,27 @@ public class DataManager
      *  DATOS DE PRODUCTOS
      ***/
 
-    public struct InAppProduct
+    public class InAppProduct
     {
         public string icon;
         public string ID;
         public string name;
         public string description;
         public string price;
+
+        public InAppProduct()
+        {
+            this.ID = "";
+            this.icon = "";
+            this.name = "";
+            this.description = "";
+            this.price = "";
+        }
+
+        public bool IsValid()
+        {
+            return this.ID != "";
+        }
 
         public InAppProduct(string ID, string icon, string name, string description, string price)
         {
@@ -112,6 +126,19 @@ public class DataManager
     };
 
     public static bool loadedOnlineInAppProducts = false;
+
+    public static InAppProduct GetInAppProductByID(string ID)
+    {
+        for (int i = 0; i < inAppProducts.Length; i++)
+        {
+            if (inAppProducts[i].ID == ID)
+            {
+                return inAppProducts[i];
+            }
+        }
+
+        return new InAppProduct();
+    }
 
     public static void SetProductData(string ID, string name, string description, string price)
     {
