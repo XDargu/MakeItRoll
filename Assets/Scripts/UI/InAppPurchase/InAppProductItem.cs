@@ -14,7 +14,7 @@ public class InAppProductItem : MonoBehaviour
     private string m_ProductID;
     private Action<string> m_PurchaseCallback;
 
-    public void SetProduct(Product p, Action<string> purchaseCallback)
+    public void SetProduct(Product p, Action<string> purchaseCallback, bool itemBought)
     {
         name.text = p.metadata.localizedTitle;
         description.text = p.metadata.localizedDescription;
@@ -23,7 +23,11 @@ public class InAppProductItem : MonoBehaviour
         m_ProductID = p.definition.id;
         m_PurchaseCallback = purchaseCallback;
 
-        buyButton.interactable = p.availableToPurchase;
+        if (itemBought)
+        {
+            buyButton.interactable = false;
+            //buyButton.interactable = p.availableToPurchase;
+        }
 
         DataManager.InAppProduct dataProduct = DataManager.GetInAppProductByID(m_ProductID);
         if (dataProduct.IsValid())
@@ -35,7 +39,7 @@ public class InAppProductItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        buyButton.interactable = false;
+        //buyButton.interactable = false;
     }
 
     // Update is called once per frame

@@ -3677,6 +3677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storeItemPrefab: {fileID: 4802390121494223038, guid: 25eab87627d1668448d9e4c5aafae579, type: 3}
+  nextItemPrefab: {fileID: 6855021183558564883, guid: 261f1717f79519c46bed52caef68ff38, type: 3}
   colorOdds: {r: 0, g: 0, b: 0, a: 0}
 --- !u!82 &577912001
 AudioSource:
@@ -10217,9 +10218,9 @@ RectTransform:
   m_Father: {fileID: 481825013}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 376.48148, y: -65}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 376.48148, y: 0}
   m_SizeDelta: {x: 0, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1902364884

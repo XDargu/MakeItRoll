@@ -24,6 +24,11 @@ namespace CompleteProject
 		// kProductIDSubscription - it has custom Apple and Google identifiers. We declare their store-
 		// specific mapping to Unity Purchasing's AddProduct, below.
 
+        public const string DOUBLE_PAPER = "double_paper";
+        public const string DOUBLE_METERS = "double_meters";
+        public const string x100_PRODUCTION = "x100_production";
+        public const string METERS_1000 = "meters_1000";
+
         public GameObject targetUI;
         public InAppProductItem storeItemPrefab;
 
@@ -35,6 +40,15 @@ namespace CompleteProject
 				// Begin to configure our connection to Purchasing
 				InitializePurchasing();
 			}
+
+            // Load local data regarding purchased products, in case user does not have internet access
+            foreach (DataManager.InAppProduct product in DataManager.inAppProducts)
+            {
+                if (PlayerPrefs.HasKey(product.ID))
+                {
+                    SetProductPurchased(product.ID, false);
+                }
+            }
 		}
 
 		public void InitializePurchasing()
@@ -147,21 +161,51 @@ namespace CompleteProject
 			Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
 		}
 
+        void SetProductPurchased(string ID, bool justPurchased)
+        {
+            if (String.Equals(ID, DOUBLE_METERS, StringComparison.Ordinal))
+            {
+                DataManager.DoubleMeters();
+                PlayerPrefs.SetInt("no_ads", 1);
+                PlayerPrefs.SetInt(DOUBLE_METERS, 1);
+                Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", ID));
+            }
+            else if (String.Equals(ID, x100_PRODUCTION, StringComparison.Ordinal))
+            {
+                if (justPurchased)
+                {
+                    DataManager.x100Production();
+                }
+                PlayerPrefs.SetInt("no_ads", 1);
+                PlayerPrefs.SetInt(x100_PRODUCTION, 1);
+                Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", ID));
+            }
+            else if (String.Equals(ID, METERS_1000, StringComparison.Ordinal))
+            {
+                if (justPurchased)
+                {
+                    DataManager.x1000Meters();
+                }
+                PlayerPrefs.SetInt("no_ads", 1);
+                PlayerPrefs.SetInt(METERS_1000, 1);
+                Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", ID));
+            }
+            else if (String.Equals(ID, DOUBLE_PAPER, StringComparison.Ordinal))
+            {
+                DataManager.EnableDoublePaper();
+                PlayerPrefs.SetInt("no_ads", 1);
+                PlayerPrefs.SetInt(DOUBLE_PAPER, 1);
+                Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", ID));
+            }
+            else
+            {
+                Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", ID));
+            }
+        }
 
 		public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
 		{
-			// A consumable product has been purchased by this user.
-            if (String.Equals(args.purchasedProduct.definition.id, "double_paper", StringComparison.Ordinal))
-			{
-				Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-				// The consumable item has been successfully purchased, add 100 coins to the player's in-game score.
-				//ScoreManager.score += 100;
-				// nyapa todo: implement actual reveniew
-			}
-			else
-			{
-				Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
-			}
+            SetProductPurchased(args.purchasedProduct.definition.id, true);
 
 			// Return a flag indicating whether this product has completely been received, or if the application needs 
 			// to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 
@@ -181,11 +225,22 @@ namespace CompleteProject
         {
             foreach (Product product in products)
             {
+                bool itemBought = false;
+
+                // Check if you already have the product
+                // We will NOT override local storage data
+                // Probably mean that it can be easily hacked, but better that than not giving a user what he paid for!
+                if (product.hasReceipt)
+                {
+                    itemBought = true;
+                    SetProductPurchased(product.definition.id, false);
+                }
+
                 DataManager.SetProductData(product.definition.id, product.metadata.localizedTitle, product.metadata.localizedDescription, product.metadata.localizedPriceString);
 
                 InAppProductItem item = Instantiate(storeItemPrefab) as InAppProductItem;
                 item.transform.SetParent(targetUI.transform, false);
-                item.SetProduct(product, BuyProductID);
+                item.SetProduct(product, BuyProductID, itemBought);
             }
 
             DataManager.SetOnlineProductsLoaded();
