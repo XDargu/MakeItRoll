@@ -15,13 +15,6 @@ public class StoreItem : MonoBehaviour
     public Button buyButton;
     public Image icon;
 
-    AudioSource m_AudioSource;
-
-    void Awake()
-    {
-        m_AudioSource = GetComponent<AudioSource>();
-    }
-
     // Use this for initialization
     void Start()
     {
@@ -57,7 +50,9 @@ public class StoreItem : MonoBehaviour
 
         if (DataManager.meters >= realPrice)
         {
-            m_AudioSource.Play();
+            AudioSource parentAudioSource = transform.parent.gameObject.GetComponent<AudioSource>();
+            parentAudioSource.Play();
+            
             DataManager.storeItemsData[ID] = oldAmount + 1;
             DataManager.meters -= realPrice;
 
@@ -68,6 +63,12 @@ public class StoreItem : MonoBehaviour
             DataManager.SaveMeters();
 
             UpdateData();
+
+            // Check if we just unlocked the next one
+            if ((oldAmount + 1) == DataManager.kStoreItemsToUnlock)
+            {
+                GUIManager.UpdateStoreItems();
+            }
         }
     }
 

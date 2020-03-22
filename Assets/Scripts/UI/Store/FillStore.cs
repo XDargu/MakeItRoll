@@ -38,6 +38,15 @@ public class FillStore : MonoBehaviour
 
         for (int i = 0; i < DataManager.storeItems.Length; i++)
         {
+            if (i > 0)
+            {
+                string prevID = DataManager.storeItems[i - 1].ID;
+                // Only do it if we have at least 10 of the previous one
+                if (DataManager.storeItemsData[prevID] < DataManager.kStoreItemsToUnlock)
+                {
+                    break;
+                }
+            }
             GameObject item = Instantiate(storeItemPrefab) as GameObject;
             item.transform.SetParent(transform, false);
 

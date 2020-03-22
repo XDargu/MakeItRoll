@@ -161,6 +161,8 @@ public class DataManager
     /***
      *  DATOS DE LA TIENDA
      ***/
+    public static int kStoreItemsToUnlock = 10;
+
     public struct StoreItem
     {
         public string ID;
