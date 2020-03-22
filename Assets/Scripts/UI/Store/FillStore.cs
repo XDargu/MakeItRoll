@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class FillStore : MonoBehaviour
 {
     public GameObject storeItemPrefab;
+    public GameObject nextItemPrefab;
 
     public Color colorOdds;
 
@@ -44,6 +45,16 @@ public class FillStore : MonoBehaviour
                 // Only do it if we have at least 10 of the previous one
                 if (DataManager.storeItemsData[prevID] < DataManager.kStoreItemsToUnlock)
                 {
+                    // Display next ite preview instead
+                    if (i < DataManager.storeItems.Length - 1)
+                    {
+                        GameObject nextItem = Instantiate(nextItemPrefab) as GameObject;
+                        nextItem.transform.SetParent(transform, false);
+
+                        Image nextItemImage = nextItem.gameObject.GetComponent<Image>();
+
+                        if (i % 2 != 0) { nextItemImage.color = colorOdds; }
+                    }
                     break;
                 }
             }
