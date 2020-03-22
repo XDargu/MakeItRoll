@@ -26,6 +26,9 @@ namespace CompleteProject
 		public static string kConsumableDoubleMeters = "consumable_double_meters";
 		public static string kConsumableDoubleMetersGoogleName = "double_meters";
 
+        public GameObject targetUI;
+        public InAppProductItem storeItemPrefab;
+
 		void Start()
 		{
 			// If we haven't set up the Unity Purchasing reference
@@ -141,6 +144,8 @@ namespace CompleteProject
 			m_StoreController = controller;
 			// Store specific subsystem, for accessing device-specific store features.
 			m_StoreExtensionProvider = extensions;
+
+            PopulateUI(m_StoreController.products.all);
 		}
 
 
@@ -179,5 +184,19 @@ namespace CompleteProject
 			// this reason with the user to guide their troubleshooting actions.
 			Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
 		}
+
+        void PopulateUI(Product[] products)
+        {
+            foreach (Product product in products)
+            {
+                DataManager.SetProductData(product.definition.id, product.metadata.localizedTitle, product.metadata.localizedDescription, product.metadata.localizedPriceString);
+
+                InAppProductItem item = Instantiate(storeItemPrefab) as InAppProductItem;
+                item.transform.SetParent(targetUI.transform, false);
+                item.SetProduct(product, BuyProductID);
+            }
+
+            DataManager.SetOnlineProductsLoaded();
+        }
 	}
 }

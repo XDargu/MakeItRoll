@@ -113,15 +113,21 @@ public class DataManager
 
     public static bool loadedOnlineInAppProducts = false;
 
-    public static void GetOnlineInAppProductDetails()
+    public static void SetProductData(string ID, string name, string description, string price)
     {
         for (int i = 0; i < inAppProducts.Length; i++)
         {
-            /*GoogleProductTemplate product = AndroidInAppPurchaseManager.instance.inventory.GetProductDetails(inAppProducts[i].ID);
-            inAppProducts[i].name = product.title.Substring(0, product.title.Length - "(Make It Roll: Toilet Paper Fun)".Length);
-            inAppProducts[i].description = product.description;
-            inAppProducts[i].price = product.price;*/
+            if (inAppProducts[i].ID == ID)
+            {
+                inAppProducts[i].name = name;
+                inAppProducts[i].description = description;
+                inAppProducts[i].price = price;
+            }
         }
+    }
+
+    public static void SetOnlineProductsLoaded()
+    {
         loadedOnlineInAppProducts = true;
     }
 

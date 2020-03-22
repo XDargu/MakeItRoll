@@ -13,7 +13,7 @@ public class UpgradeItem : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        UpdateButton();
+        //UpdateButton();
     }
 
     void UpdateButton()

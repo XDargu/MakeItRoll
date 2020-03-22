@@ -25,7 +25,7 @@ public class StoreItem : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        UpdateButton();
+        //UpdateButton();
     }
 
     void UpdateButton()
