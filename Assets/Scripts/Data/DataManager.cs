@@ -27,6 +27,7 @@ public class DataManager
     public static float toiletMPS = 500f / 3600f;
 
     public static bool WCOpen = true;
+    public static bool InGame = true;
 
     public static bool NoAds
     {

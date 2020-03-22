@@ -437,7 +437,7 @@ public class MoveDown : MonoBehaviour {
 
     public void OnGesture(Gesture gesture)
     {
-        //if (tabPanel.Position.y > 0)
+        if (DataManager.InGame)
         {
             if (gesture.type == GestureType.Drag)
             {
@@ -463,8 +463,6 @@ public class MoveDown : MonoBehaviour {
                 if (GetComponent<BoxCollider2D>().OverlapPoint(mousePosition))
                 {
 
-                    //if (gesture.delta.y < 0)
-                    
                     float gDistance = gesture.delta.y;
                     float gSpeed = gDistance / gesture.gestureTime;
 
