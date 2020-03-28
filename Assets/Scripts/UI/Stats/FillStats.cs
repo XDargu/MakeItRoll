@@ -10,6 +10,9 @@ public class FillStats : MonoBehaviour
 
     public Color colorOdds;
 
+    public float updateRate = 1.0f;
+    float counter = 0.0f;
+
     void Awake()
     {
         RefreshList();
@@ -18,13 +21,18 @@ public class FillStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        counter = 0.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        RefreshList();
+        counter += Time.deltaTime;
+        if (counter > updateRate)
+        {
+            RefreshList();
+            counter = 0.0f;
+        }
     }
 
     void CreateStat(int index, string title, string data)
@@ -45,9 +53,17 @@ public class FillStats : MonoBehaviour
 
     public void RefreshList()
     {
+        Transform achievementsTransform = null;
         foreach (Transform child in transform)
         {
-            GameObject.Destroy(child.gameObject);
+            if (child.name != "AchievementItem")
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+            else
+            {
+                achievementsTransform = child;
+            }
         }
 
         StatsManager statsManager = GameObject.FindObjectOfType<StatsManager>();
@@ -59,5 +75,11 @@ public class FillStats : MonoBehaviour
         CreateStat(4, "Total time:", Utils.GetTimeDifference(statsManager.totalStart, DateTime.Now));
         CreateStat(5, "Game time:", Utils.GetTimeDifference(statsManager.gameStart, DateTime.Now));
         CreateStat(6, "Resets:", statsManager.resets + " RESETS");
+
+        // Move achievement item to the end
+        if (achievementsTransform != null)
+        {
+            achievementsTransform.SetSiblingIndex(transform.childCount - 1);
+        }
     }
 }

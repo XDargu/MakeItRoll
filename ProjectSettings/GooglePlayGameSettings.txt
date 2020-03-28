@@ -1,0 +1,9 @@
+lastUpgrade=01007
+proj.pluginVersion=0.10.07
+proj.AppId=229181284581
+and.BundleId=com.OverratedGames.MakeItRoll
+proj.classDir=Assets
+proj.ConstantsClassName=GPGSIds
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0a%3cresources%3e%0d%0a++%3c%21--+app_id+--%3e%0d%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e229181284581%3c%2fstring%3e%0d%0a++%3c%21--+package_name+--%3e%0d%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.OverratedGames.MakeItRoll%3c%2fstring%3e%0d%0a++%3c%21--+achievement+Very+first+pull+--%3e%0d%0a++%3cstring+name%3d%22achievement_very_first_pull%22+translatable%3d%22false%22%3eCgkI5cGT4tUGEAIQBQ%3c%2fstring%3e%0d%0a++%3c%21--+achievement+Few+rolls+--%3e%0d%0a++%3cstring+name%3d%22achievement_few_rolls%22+translatable%3d%22false%22%3eCgkI5cGT4tUGEAIQBg%3c%2fstring%3e%0d%0a++%3c%21--+achievement+Did+somebody+ask+for+some+toilet+paper%3f+--%3e%0d%0a++%3cstring+name%3d%22achievement_did_somebody_ask_for_some_toilet_paper%22+translatable%3d%22false%22%3eCgkI5cGT4tUGEAIQBw%3c%2fstring%3e%0d%0a++%3c%21--+achievement+Yep%2c+it+is+clogged+--%3e%0d%0a++%3cstring+name%3d%22achievement_yep_it_is_clogged%22+translatable%3d%22false%22%3eCgkI5cGT4tUGEAIQCA%3c%2fstring%3e%0d%0a++%3c%21--+achievement+To+the+inifity+and+Beyond+--%3e%0d%0a++%3cstring+name%3d%22achievement_to_the_inifity_and_beyond%22+translatable%3d%22false%22%3eCgkI5cGT4tUGEAIQCQ%3c%2fstring%3e%0d%0a%3c%2fresources%3e%0d%0a
+and.ClientId=
+android.SetupDone=true

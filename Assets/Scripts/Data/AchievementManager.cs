@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using GooglePlayGames;
+using UnityEngine.SocialPlatforms;
 
 public class AchievementManager : MonoBehaviour {
 
     public static bool playServicesLoaded = false;
-
-    //public static Dictionary<string, bool> achievementState = new Dictionary<string,bool>();
 
     float counter = 0f;
     public float updateRate = 5f;
@@ -19,7 +19,7 @@ public class AchievementManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         // Logros
-        /*if (playServicesLoaded)
+        if (playServicesLoaded)
         {
             counter += Time.deltaTime;
             if (counter >= updateRate)
@@ -27,44 +27,44 @@ public class AchievementManager : MonoBehaviour {
                 counter = 0f;
                 if (DataManager.meters >= 1)
                 {
-                    if (GooglePlayManager.instance.achievements["CgkI5cGT4tUGEAIQBQ"].state != GPAchievementState.STATE_UNLOCKED)
+                    Social.ReportProgress("CgkI5cGT4tUGEAIQBQ", 100.0f, (bool success) =>
                     {
-                        GooglePlayManager.instance.reportAchievementById("CgkI5cGT4tUGEAIQBQ");
-                    }
+                        // handle success or failure
+                    });
                 }
 
                 if (DataManager.meters >= 100)
                 {
-                    if (GooglePlayManager.instance.achievements["CgkI5cGT4tUGEAIQBg"].state != GPAchievementState.STATE_UNLOCKED)
+                    Social.ReportProgress("CgkI5cGT4tUGEAIQBg", 100.0f, (bool success) =>
                     {
-                        GooglePlayManager.instance.reportAchievementById("CgkI5cGT4tUGEAIQBg");
-                    }
+                        // handle success or failure
+                    });
                 }
 
                 if (DataManager.meters >= 1000000)
                 {
-                    if (GooglePlayManager.instance.achievements["CgkI5cGT4tUGEAIQBw"].state != GPAchievementState.STATE_UNLOCKED)
+                    Social.ReportProgress("CgkI5cGT4tUGEAIQBw", 100.0f, (bool success) =>
                     {
-                        GooglePlayManager.instance.reportAchievementById("CgkI5cGT4tUGEAIQBw");
-                    }
+                        // handle success or failure
+                    });
                 }
 
                 if (DataManager.meters >= 1000000000)
                 {
-                    if (GooglePlayManager.instance.achievements["CgkI5cGT4tUGEAIQCA"].state != GPAchievementState.STATE_UNLOCKED)
+                    Social.ReportProgress("CgkI5cGT4tUGEAIQCA", 100.0f, (bool success) =>
                     {
-                        GooglePlayManager.instance.reportAchievementById("CgkI5cGT4tUGEAIQCA");
-                    }
+                        // handle success or failure
+                    });
                 }
 
                 if (DataManager.meters >= 1000000000000)
                 {
-                    if (GooglePlayManager.instance.achievements["CgkI5cGT4tUGEAIQCQ"].state != GPAchievementState.STATE_UNLOCKED)
+                    Social.ReportProgress("CgkI5cGT4tUGEAIQCQ", 100.0f, (bool success) =>
                     {
-                        GooglePlayManager.instance.reportAchievementById("CgkI5cGT4tUGEAIQCQ");
-                    }
+                        // handle success or failure
+                    });
                 }
             }
-        }*/
+        }
 	}
 }
