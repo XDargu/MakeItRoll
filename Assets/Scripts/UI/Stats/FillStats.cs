@@ -32,8 +32,8 @@ public class FillStats : MonoBehaviour
         GameObject item = Instantiate(statItemPrefab) as GameObject;
         item.transform.SetParent(transform, false);
 
-        Text name = item.transform.FindChild("Title").GetComponent<Text>();
-        Text stat = item.transform.FindChild("Stat").GetComponent<Text>();
+        Text name = item.transform.Find("Title").GetComponent<Text>();
+        Text stat = item.transform.Find("Stat").GetComponent<Text>();
 
         name.text = title;
         stat.text = data;

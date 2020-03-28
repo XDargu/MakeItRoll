@@ -48,10 +48,10 @@ public class FillUpgrades : MonoBehaviour
     {
         GameObject item = Instantiate(upgradeItemPrefab) as GameObject;
 
-        Text nameLabel = item.transform.FindChild("Name").GetComponent<Text>();
-        Text descriptionLabel = item.transform.FindChild("Description").GetComponent<Text>();
-        Text priceLabel = item.transform.FindChild("Price").GetComponent<Text>();
-        Image icon = item.transform.FindChild("Icon").GetComponent<Image>();
+        Text nameLabel = item.transform.Find("Name").GetComponent<Text>();
+        Text descriptionLabel = item.transform.Find("Description").GetComponent<Text>();
+        Text priceLabel = item.transform.Find("Price").GetComponent<Text>();
+        Image icon = item.transform.Find("Icon").GetComponent<Image>();
         icon.sprite = Resources.Load<Sprite>("Upgrades/" + ID);
 
         UpgradeItem upgradeItem = item.gameObject.GetComponent<UpgradeItem>();

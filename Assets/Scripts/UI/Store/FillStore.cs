@@ -65,11 +65,11 @@ public class FillStore : MonoBehaviour
 
             if (i % 2 != 0) { image.color = colorOdds; }
 
-            Text name = item.transform.FindChild("Name").GetComponent<Text>();
-            Text description = item.transform.FindChild("Description").GetComponent<Text>();
-            Text data = item.transform.FindChild("Data").GetComponent<Text>();
-            Text amount = item.transform.FindChild("AmountSprite").FindChild("Amount").GetComponent<Text>();
-            Text price = item.transform.FindChild("Price").GetComponent<Text>();
+            Text name = item.transform.Find("Name").GetComponent<Text>();
+            Text description = item.transform.Find("Description").GetComponent<Text>();
+            Text data = item.transform.Find("Data").GetComponent<Text>();
+            Text amount = item.transform.Find("AmountSprite").Find("Amount").GetComponent<Text>();
+            Text price = item.transform.Find("Price").GetComponent<Text>();
 
             StoreItem storeItem = item.gameObject.GetComponent<StoreItem>();
             storeItem.ID = DataManager.storeItems[i].ID;
