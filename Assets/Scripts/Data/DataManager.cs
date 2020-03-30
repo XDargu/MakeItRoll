@@ -82,6 +82,33 @@ public class DataManager
         IsHappyHour = false;        
     }
 
+    public static bool IsVideoRewardActive;
+    public static DateTime videoRewardTime;
+
+    public static void EnableVideoReward()
+    {
+        PlayerPrefs.SetInt("videoRewardActive", 1);
+        PlayerPrefs.SetString("videoRewardTime", DateTime.Now.ToString());
+        IsVideoRewardActive = true;
+        videoRewardTime = DateTime.Now;
+
+    }
+    public static void DisableVideoReward()
+    {
+        PlayerPrefs.DeleteKey("videoRewardActive");
+        PlayerPrefs.DeleteKey("videoRewardTime");
+        IsVideoRewardActive = false;
+    }
+
+    public static void RestoreVideoReward()
+    {
+        if (PlayerPrefs.HasKey("videoRewardActive"))
+        {
+            DataManager.IsVideoRewardActive = true;
+            DataManager.videoRewardTime = DateTime.Parse(PlayerPrefs.GetString("videoRewardTime", DateTime.Now.ToString()));
+        }
+    }
+
     /***
      *  DATOS DE PRODUCTOS
      ***/

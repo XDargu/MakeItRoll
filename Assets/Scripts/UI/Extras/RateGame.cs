@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RateGame : MonoBehaviour
 {
-    string rateURL = "market://details?id=com.example.android";
+    string rateURL = "market://details?id=com.OverratedGames.MakeItRoll";
     string key = "rateGame";
     bool visited;
 

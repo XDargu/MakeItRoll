@@ -25,6 +25,10 @@ public class LabelMetersPerSecond : MonoBehaviour
         {
             globalMultiplier *= 100;
         }
+        if (DataManager.IsVideoRewardActive)
+        {
+            globalMultiplier *= 1.5f;
+        }
         string multiplier = "";
         if (globalMultiplier > 1)
         {

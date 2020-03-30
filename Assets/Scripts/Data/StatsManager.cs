@@ -73,7 +73,9 @@ public class StatsManager : MonoBehaviour {
             DataManager.IsHappyHour = true;
             DataManager.happyHourTime = DateTime.Parse(PlayerPrefs.GetString("x100StartTime", DateTime.Now.ToString()));
         }
-	}
+
+        DataManager.RestoreVideoReward();
+    }
 
     float total_counter = 0f;
 	
@@ -96,6 +98,15 @@ public class StatsManager : MonoBehaviour {
             }
         }
 
+        // Video reward
+        if (DataManager.IsVideoRewardActive)
+        {
+            if (DateTime.Now.Subtract(DataManager.videoRewardTime).TotalMinutes > 10)
+            {
+                DataManager.DisableVideoReward();
+            }
+        }
+
         float mps = (DataManager.userMPS + DataManager.totalMPS) * Time.deltaTime;
         float globalMultiplier = 1f;
         if (DataManager.IsDoublePaperPurchased)
@@ -105,6 +116,10 @@ public class StatsManager : MonoBehaviour {
         if (DataManager.IsHappyHour)
         {
             globalMultiplier *= 100;
+        }
+        if (DataManager.IsVideoRewardActive)
+        {
+            globalMultiplier *= 1.5f;
         }
 
         DataManager.meters += mps * globalMultiplier;
