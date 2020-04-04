@@ -240,6 +240,7 @@ namespace CompleteProject
 
                 InAppProductItem item = Instantiate(storeItemPrefab) as InAppProductItem;
                 item.transform.SetParent(targetUI.transform, false);
+                item.transform.SetSiblingIndex(targetUI.transform.childCount - 3);
                 item.SetProduct(product, BuyProductID, itemBought);
             }
 

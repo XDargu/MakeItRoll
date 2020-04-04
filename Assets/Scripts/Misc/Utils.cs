@@ -26,7 +26,9 @@ public class Utils
 
     public static string FloatToString(float value)
     {
-        if (Mathf.Floor(value) != value)
+        if (float.IsNaN(value))
+            return "";
+        else if (Mathf.Floor(value) != value)
             return value.ToString("#,0.0");
         else
             return value.ToString("#,0");

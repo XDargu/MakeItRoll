@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class FillUpgrades : MonoBehaviour
 {
+    public GameObject contentObject;
     public GameObject upgradeItemPrefab;
     VerticalLayoutGroup m_VerticalLayourGroup;
 
@@ -72,28 +73,15 @@ public class FillUpgrades : MonoBehaviour
         List<string> updateList = new List<string>();
         List<SortingData> sortingData = new List<SortingData>();
 
-        foreach (Transform child in transform)
+        if (contentObject)
         {
-            GameObject.Destroy(child.gameObject);
+            foreach (Transform child in contentObject.transform)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
         }
 
         bool skipUpgrade = false;
-
-        // Ordenar por precio
-        /*Array.Sort(DataManager.storeItemUpgrades, delegate(DataManager.StoreItemUpgrade item1, DataManager.StoreItemUpgrade item2)
-        {
-            return item1.price.CompareTo(item2.price);
-        });
-
-        Array.Sort(DataManager.rollUpgrades, delegate(DataManager.RollUpgrade item1, DataManager.RollUpgrade item2)
-        {
-            return item1.price.CompareTo(item2.price);
-        });
-
-        Array.Sort(DataManager.toiletUpgrades, delegate(DataManager.ToiletUpgrade item1, DataManager.ToiletUpgrade item2)
-        {
-            return item1.price.CompareTo(item2.price);
-        });*/
 
         // De rollo
         for (int i = 0; i < DataManager.rollUpgrades.Length; i++)
@@ -120,9 +108,13 @@ public class FillUpgrades : MonoBehaviour
 
             if (!skipUpgrade)
             {
-                GameObject upgrade = AddUpgrade(DataManager.rollUpgrades[i].ID, DataManager.rollUpgrades[i].price, DataManager.rollUpgrades[i].name, DataManager.rollUpgrades[i].description);
+                if (contentObject)
+                {
+                    GameObject upgrade = AddUpgrade(DataManager.rollUpgrades[i].ID, DataManager.rollUpgrades[i].price, DataManager.rollUpgrades[i].name, DataManager.rollUpgrades[i].description);
+                    sortingData.Add(new SortingData(DataManager.rollUpgrades[i].price, upgrade));
+                }
+
                 updateList.Add(DataManager.rollUpgrades[i].ID);
-                sortingData.Add(new SortingData(DataManager.rollUpgrades[i].price, upgrade));
             }
         }
 
@@ -151,9 +143,13 @@ public class FillUpgrades : MonoBehaviour
 
             if (!skipUpgrade)
             {
-                GameObject upgrade = AddUpgrade(DataManager.toiletUpgrades[i].ID, DataManager.toiletUpgrades[i].price, DataManager.toiletUpgrades[i].name, DataManager.toiletUpgrades[i].description);
+                if (contentObject)
+                {
+                    GameObject upgrade = AddUpgrade(DataManager.toiletUpgrades[i].ID, DataManager.toiletUpgrades[i].price, DataManager.toiletUpgrades[i].name, DataManager.toiletUpgrades[i].description);
+                    sortingData.Add(new SortingData(DataManager.toiletUpgrades[i].price, upgrade));
+                }
+
                 updateList.Add(DataManager.toiletUpgrades[i].ID);
-                sortingData.Add(new SortingData(DataManager.toiletUpgrades[i].price, upgrade));
             }
         }
 
@@ -178,9 +174,48 @@ public class FillUpgrades : MonoBehaviour
 
             if (!skipUpgrade)
             {
-                GameObject upgrade = AddUpgrade(DataManager.storeItemUpgrades[i].ID, DataManager.storeItemUpgrades[i].price, DataManager.storeItemUpgrades[i].name, DataManager.storeItemUpgrades[i].description);
+                if (contentObject)
+                {
+                    GameObject upgrade = AddUpgrade(DataManager.storeItemUpgrades[i].ID, DataManager.storeItemUpgrades[i].price, DataManager.storeItemUpgrades[i].name, DataManager.storeItemUpgrades[i].description);
+                    sortingData.Add(new SortingData(DataManager.storeItemUpgrades[i].price, upgrade));
+                }
+
                 updateList.Add(DataManager.storeItemUpgrades[i].ID);
-                sortingData.Add(new SortingData(DataManager.storeItemUpgrades[i].price, upgrade));
+            }
+        }
+
+        // Golden
+        for (int i = 0; i < DataManager.goldenUpgrades.Length; i++)
+        {
+            skipUpgrade = false;
+
+            if (DataManager.upgradesData.ContainsKey(DataManager.goldenUpgrades[i].ID))
+            {
+                // No tener la mejora
+                if (DataManager.upgradesData[DataManager.goldenUpgrades[i].ID] == true)
+                {
+                    skipUpgrade = true;
+                }
+            }
+
+            // No se tiene la mejora anterior
+            if (DataManager.goldenUpgrades[i].prevID != null)
+            {
+                if (DataManager.upgradesData[DataManager.goldenUpgrades[i].prevID] == false)
+                {
+                    skipUpgrade = true;
+                }
+            }
+
+            if (!skipUpgrade)
+            {
+                if (contentObject)
+                {
+                    GameObject upgrade = AddUpgrade(DataManager.goldenUpgrades[i].ID, DataManager.goldenUpgrades[i].price, DataManager.goldenUpgrades[i].name, DataManager.goldenUpgrades[i].description);
+                    sortingData.Add(new SortingData(DataManager.goldenUpgrades[i].price, upgrade));
+                }
+                
+                updateList.Add(DataManager.goldenUpgrades[i].ID);
             }
         }
 
@@ -188,19 +223,22 @@ public class FillUpgrades : MonoBehaviour
 
         // Ordenar
         // Array temporal
-        sortingData.Sort(delegate(SortingData item1, SortingData item2)
+        if (contentObject)
         {
-            return item1.price.CompareTo(item2.price);
-        });
-
-        // Recorrer, cambiar ZOrder y cambiar color
-        for (int i = 0; i < sortingData.Count; i++)
-        {
-            sortingData[i].gameObject.transform.SetParent(transform, false);
-            if (i % 2 != 0) 
+            sortingData.Sort(delegate (SortingData item1, SortingData item2)
             {
-                Image image = sortingData[i].gameObject.GetComponent<Image>();
-                image.color = colorOdds;
+                return item1.price.CompareTo(item2.price);
+            });
+
+            // Recorrer, cambiar ZOrder y cambiar color
+            for (int i = 0; i < sortingData.Count; i++)
+            {
+                sortingData[i].gameObject.transform.SetParent(contentObject.transform, false);
+                if (i % 2 != 0)
+                {
+                    Image image = sortingData[i].gameObject.GetComponent<Image>();
+                    image.color = colorOdds;
+                }
             }
         }
     }

@@ -19,9 +19,9 @@ public class DataManager
 
     public static float userSpeed = 0.2f;
 
-    public static float goldenRollTime = 30f;
-
-    public static int goldenRollChance = 2;
+    public static float goldenRollChance = 1.0f;
+    public static float goldenRollChanceBase = 6.0f;
+    public static float goldenRollMultiplier = 6.0f;
 
     public static float toiletCapacity = 1000f;
     public static float toiletMPS = 500f / 3600f;
@@ -288,24 +288,20 @@ public class DataManager
     public struct GoldenRollUpgrade
     {
         public string ID;
+        public string prevID;
         public string name;
         public string description;
         public float price;
-        public float timeSumIncrement;
-        public float timeMulIncrement;
-        public float frequencySumIncrement;
-        public float frequencyMulIncrement;
+        public float frequencySet;
 
-        public GoldenRollUpgrade(string ID, string name, string description, float price, float timeSumIncrement, float timeMulIncrement, float frequencySumIncrement, float frequencyMulIncrement)
+        public GoldenRollUpgrade(string ID, string prevID, string name, string description, float price, float frequencySet)
         {
             this.ID = ID;
+            this.prevID = prevID;
             this.name = name;
             this.description = description;
             this.price = price;
-            this.timeSumIncrement = timeSumIncrement;
-            this.timeMulIncrement = timeMulIncrement;
-            this.frequencySumIncrement = frequencySumIncrement;
-            this.frequencyMulIncrement = frequencyMulIncrement;
+            this.frequencySet = frequencySet;
         }
     }
 
@@ -364,6 +360,17 @@ public class DataManager
         new RollUpgrade("UPR13", "UPR12", "Mega rolls", "Toilet rolls gains 60 times its capacity", 12500000000, 0f, 0f, 0f, 60f), // 3,600,000 M -- 9,6 seg
         new RollUpgrade("UPR14", "UPR13", "Infinite rolls", "Toilet rolls gains 120 times its capacity", 25000000000000, 0f, 0f, 0f, 120f), // 432,000,000 M -- 11,52 seg
     };
+
+    public static GoldenRollUpgrade[] goldenUpgrades = new GoldenRollUpgrade[] {
+        // Base: 1%
+        new GoldenRollUpgrade("SI18-0", null,     "14K golden sheets", "2% chance of getting a golden toilet roll", 2000, 2), // 2%
+        new GoldenRollUpgrade("SI18-1", "SI18-0", "18K golden sheets", "4% chance of getting a golden toilet roll", 60000, 4), // 4%
+        new GoldenRollUpgrade("SI18-2", "SI18-1", "22K golden sheets", "8% chance of getting a golden toilet roll", 20000000, 8), // 8%
+        new GoldenRollUpgrade("SI18-3", "SI18-2", "23K golden sheets", "15% chance of getting a golden toilet roll", 25000000000, 15), // 15%
+        new GoldenRollUpgrade("SI18-4", "SI18-3", "24K golden sheets", "25% chance of getting a golden toilet roll", 50000000000000, 25), // 25%
+    };
+
+    
 
     public static StoreItemUpgrade[] storeItemUpgrades = new StoreItemUpgrade[] {
         new StoreItemUpgrade("UP0", "SI0", 1, "Flower up", "All plants gains +0.1 m/s", 100, 0.1f, 0f),
@@ -549,6 +556,17 @@ public class DataManager
                 }
             }
         }
+
+        foreach (GoldenRollUpgrade goldenUpgrade in goldenUpgrades)
+        {
+            if (upgradesData.ContainsKey(goldenUpgrade.ID))
+            {
+                if (upgradesData[goldenUpgrade.ID] == true)
+                {
+                    PlayerPrefs.SetInt(goldenUpgrade.ID, 1);
+                }
+            }
+        }
     }
 
     public static void DeleteUpgrades()
@@ -574,6 +592,14 @@ public class DataManager
             if (PlayerPrefs.HasKey(toiletUpgrade.ID))
             {
                 PlayerPrefs.DeleteKey(toiletUpgrade.ID);
+            }
+        }
+
+        foreach (GoldenRollUpgrade goldenUpgrade in goldenUpgrades)
+        {
+            if (PlayerPrefs.HasKey(goldenUpgrade.ID))
+            {
+                PlayerPrefs.DeleteKey(goldenUpgrade.ID);
             }
         }
     }
@@ -613,6 +639,18 @@ public class DataManager
             else
             {
                 upgradesData[toiletUpgrade.ID] = false;
+            }
+        }
+
+        foreach (GoldenRollUpgrade goldenUpgrade in goldenUpgrades)
+        {
+            if (PlayerPrefs.HasKey(goldenUpgrade.ID))
+            {
+                upgradesData[goldenUpgrade.ID] = PlayerPrefs.GetInt(goldenUpgrade.ID) == 1;
+            }
+            else
+            {
+                upgradesData[goldenUpgrade.ID] = false;
             }
         }
     }
@@ -720,6 +758,18 @@ public class DataManager
 
         userMPSSumIncrement = speedSumIncrement;
         userMPSMulIncrement = speedMulIncrement;
+
+        goldenRollChance = goldenRollChanceBase;
+        foreach (GoldenRollUpgrade goldenUpgrade in goldenUpgrades)
+        {
+            if (upgradesData.ContainsKey(goldenUpgrade.ID))
+            {
+                if (upgradesData[goldenUpgrade.ID] == true)
+                {
+                    goldenRollChance = Math.Max(goldenRollChance, goldenUpgrade.frequencySet);
+                }
+            }
+        }
     }
 
     public static void UpdateToiletData(bool fromUpdate)
@@ -871,7 +921,7 @@ public class DataManager
 
     public static void Reset()
     {
-        GameObject.FindObjectOfType<MoveDown>().ReInitVariables();
+        GameObject.FindObjectOfType<MoveDown>().ReInitVariables(false);
 
         meters = 0;
         totalMPS = 0f;

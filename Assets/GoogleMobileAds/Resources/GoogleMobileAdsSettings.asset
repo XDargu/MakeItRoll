@@ -16,4 +16,4 @@ MonoBehaviour:
   isAdMobEnabled: 1
   adMobAndroidAppId: ca-app-pub-8945834368793831~9614235309
   adMobIOSAppId: ca-app-pub-8945834368793831~9614235309
-  delayAppMeasurementInit: 0
+  delayAppMeasurementInit: 1

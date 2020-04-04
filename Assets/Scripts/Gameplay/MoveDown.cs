@@ -78,10 +78,7 @@ public class MoveDown : MonoBehaviour {
 
     float lastSpeed;
 
-    public float goldenRollMultiplier = 6f;
-    bool nextGoldenRoll = false;
     bool goldenRoll = false;
-    float goldenRollCounter = 0f;
 
     AudioSource mAudioSource;
 
@@ -139,24 +136,16 @@ public class MoveDown : MonoBehaviour {
 
         shakeUp = true;
 
-        ReInitVariables();
+        ReInitVariables(false);
 
         DataManager.LoadUpgrades();
         //GUIManager.UpdateToiletPaper();
-	}
 
-    void UpdateRollCounter()
-    {
-        goldenRollCounter += Time.deltaTime;
-        if (goldenRollCounter > DataManager.goldenRollTime)
-        {
-            goldenRollCounter = 0f;
-            nextGoldenRoll = false;
-        }
     }
 
     void UpdateSpeed()
     {
+        speed = 15.0f;
         speed += acceleration;
 
         if (!ignoreFriction)
@@ -164,7 +153,7 @@ public class MoveDown : MonoBehaviour {
             speed -= friction;
         }
         speed = Mathf.Clamp(speed, 0, maxSpeed);
-        DataManager.userMPS = speed;
+        DataManager.userMPS = speed * DataManager.goldenRollMultiplier;
     }
 
     void UpdateScale()
@@ -201,7 +190,6 @@ public class MoveDown : MonoBehaviour {
         }
 
         UpdateSpeed();
-        UpdateRollCounter();
 
         switch(state)
         {
@@ -272,8 +260,7 @@ public class MoveDown : MonoBehaviour {
                         GameObject go = ObjectPool.instance.GetObjectForType("RollJump", false);
                         RollJump rj = go.GetComponent<RollJump>();
                         rj.parent = this;
-                        //rj.isGolden = Random.Range(0, 100) < DataManager.goldenRollChance;
-                        rj.isGolden = false;
+                        rj.isGolden = goldenRoll;
                         rj.Restart();
                         go.transform.position = initPosition;
 
@@ -292,7 +279,7 @@ public class MoveDown : MonoBehaviour {
 
                         // Inicializamos todo
                         ResetPieceOffset();
-                        ReInitVariables();
+                        ReInitVariables(true);
                         SetVisible();
 
                         // Recolocamos el rollo en un lateral
@@ -305,6 +292,7 @@ public class MoveDown : MonoBehaviour {
                 break;
             case EState.ServingNewRoll:
                 {
+                    UpdateScale();
                     TranslateToInitPosition();
                     speed = 0;
 
@@ -326,7 +314,7 @@ public class MoveDown : MonoBehaviour {
         transform.position = pos;
     }
 
-    public void ReInitVariables()
+    public void ReInitVariables(bool allowGoldenRoll)
     {
         timerChangeRoll = 0.0f;
         distance = 0;
@@ -350,7 +338,8 @@ public class MoveDown : MonoBehaviour {
         //Instantiate(jumpRoll, transform.position, Quaternion.identity);
 
         // Rollo dorado
-        if (nextGoldenRoll)
+        bool nextGoldenRoll = Random.Range(0, 100) < DataManager.goldenRollChance;
+        if (nextGoldenRoll && allowGoldenRoll)
         {
             piece.GetComponent<SpriteRenderer>().sprite = goldenInit;
             roll.GetComponent<SpriteRenderer>().sprite = goldenRollSprite;
@@ -363,7 +352,6 @@ public class MoveDown : MonoBehaviour {
             piece.GetComponent<SpriteRenderer>().sprite = init;
             roll.GetComponent<SpriteRenderer>().sprite = rollSprite;
             side.GetComponent<SpriteRenderer>().sprite = sideSprite;
-            goldenRollCounter = 0f;
             goldenRoll = false;
             changeTime = 4f;
         }
@@ -448,7 +436,7 @@ public class MoveDown : MonoBehaviour {
                     {
                         float distance = gesture.delta.y;
                         float gestureSpeed = distance / gesture.gestureTime;
-                        float baseSpeed = Mathf.Abs(gestureSpeed * (goldenRoll ? DataManager.userSpeed * goldenRollMultiplier : DataManager.userSpeed));
+                        float baseSpeed = Mathf.Abs(gestureSpeed * DataManager.userSpeed);
                         float extraSpeed = (baseSpeed + DataManager.userMPSSumIncrement) * DataManager.userMPSMulIncrement;
                         speed += extraSpeed;
 
@@ -466,7 +454,7 @@ public class MoveDown : MonoBehaviour {
                     float gDistance = gesture.delta.y;
                     float gSpeed = gDistance / gesture.gestureTime;
 
-                    float baseSpeed = Mathf.Abs(gSpeed * (goldenRoll ? DataManager.userSpeed * goldenRollMultiplier : DataManager.userSpeed));
+                    float baseSpeed = Mathf.Abs(gSpeed * DataManager.userSpeed);
                     speed += (baseSpeed + DataManager.userMPSSumIncrement) * DataManager.userMPSMulIncrement;
 
 
@@ -482,6 +470,6 @@ public class MoveDown : MonoBehaviour {
 
     public void StartGoldenRoll()
     {
-        nextGoldenRoll = true;
+        
     }
 }

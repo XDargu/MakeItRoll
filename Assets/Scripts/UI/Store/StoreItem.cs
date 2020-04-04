@@ -63,6 +63,7 @@ public class StoreItem : MonoBehaviour
             DataManager.SaveMeters();
 
             UpdateData();
+            GUIManager.UpdateUpgrades();
 
             // Check if we just unlocked the next one
             if ((oldAmount + 1) == DataManager.kStoreItemsToUnlock)

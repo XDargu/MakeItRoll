@@ -9,9 +9,19 @@ public class AdManager : MonoBehaviour
     private BannerView bannerView;
     private RewardedAd rewardedAd;
 
+    public bool publicRelease = false;
+    
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(LoadAdds(4));
+    }
+
+    // Hack to load adds. It crashes without it
+    IEnumerator LoadAdds(float time)
+    {
+        yield return new WaitForSeconds(time);
+
 #if UNITY_ANDROID
         string appId = "ca-app-pub-8945834368793831~9614235309";
 #else
@@ -43,8 +53,12 @@ public class AdManager : MonoBehaviour
     private void CreateAndLoadRewardedAd()
     {
 #if UNITY_ANDROID
-        //string adUnitId = "ca-app-pub-8945834368793831/4956385732";
-        string adUnitId = "ca-app-pub-3940256099942544/5224354917";
+        string adUnitId = "ca-app-pub-8945834368793831/4956385732";
+
+        if (!publicRelease)
+        {
+            adUnitId = "ca-app-pub-3940256099942544/5224354917";
+        }
 #else
         string adUnitId = "unexpected_platform";
 #endif
@@ -64,48 +78,48 @@ public class AdManager : MonoBehaviour
         this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
         // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
+        AdRequest request = new AdRequest.Builder().AddExtra("npa", "1").Build();
         // Load the rewarded ad with the request.
         this.rewardedAd.LoadAd(request);
     }
 
     public void HandleRewardedAdLoaded(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardedAdLoaded event received");
+        //MonoBehaviour.print("HandleRewardedAdLoaded event received");
     }
 
     public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
-        MonoBehaviour.print(
+        /*MonoBehaviour.print(
             "HandleRewardedAdFailedToLoad event received with message: "
-                             + args.Message);
+                             + args.Message);*/
     }
 
     public void HandleRewardedAdOpening(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardedAdOpening event received");
+        //MonoBehaviour.print("HandleRewardedAdOpening event received");
     }
 
     public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
     {
-        MonoBehaviour.print(
+        /*MonoBehaviour.print(
             "HandleRewardedAdFailedToShow event received with message: "
-                             + args.Message);
+                             + args.Message);*/
     }
 
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardedAdClosed event received");
+        //MonoBehaviour.print("HandleRewardedAdClosed event received");
         this.CreateAndLoadRewardedAd();
     }
 
     public void HandleUserEarnedReward(object sender, Reward args)
     {
-        string type = args.Type;
+        /*string type = args.Type;
         double amount = args.Amount;
         MonoBehaviour.print(
             "HandleRewardedAdRewarded event received for "
-                        + amount.ToString() + " " + type);
+                        + amount.ToString() + " " + type);*/
 
         // This callback is not called from the main Thread
         UnityMainThreadDispatcher.Instance().Enqueue(() => DataManager.EnableVideoReward());
@@ -123,8 +137,12 @@ public class AdManager : MonoBehaviour
     private void RequestBanner()
     {
 #if UNITY_ANDROID
-        //string adUnitId = "ca-app-pub-8945834368793831/2090968502";
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        string adUnitId = "ca-app-pub-8945834368793831/2090968502";
+
+        if (!publicRelease)
+        {
+            adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        }
 #else
         string adUnitId = "unexpected_platform";
 #endif
@@ -149,7 +167,7 @@ public class AdManager : MonoBehaviour
         this.bannerView.OnAdLeavingApplication += this.HandleOnAdLeavingApplication;
 
         // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
+        AdRequest request = new AdRequest.Builder().AddExtra("npa", "1").Build();
 
         // Load the banner with the request.
         this.bannerView.LoadAd(request);
@@ -157,27 +175,27 @@ public class AdManager : MonoBehaviour
 
     public void HandleOnAdLoaded(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdLoaded event received");
+        //MonoBehaviour.print("HandleAdLoaded event received");
     }
 
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
-                            + args.Message);
+        /*MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
+                            + args.Message);*/
     }
 
     public void HandleOnAdOpened(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdOpened event received");
+        //MonoBehaviour.print("HandleAdOpened event received");
     }
 
     public void HandleOnAdClosed(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdClosed event received");
+        //MonoBehaviour.print("HandleAdClosed event received");
     }
 
     public void HandleOnAdLeavingApplication(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdLeavingApplication event received");
+        //MonoBehaviour.print("HandleAdLeavingApplication event received");
     }
 }

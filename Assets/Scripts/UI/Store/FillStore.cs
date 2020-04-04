@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class FillStore : MonoBehaviour
 {
+    
+    public GameObject contentObject;
     public GameObject storeItemPrefab;
     public GameObject nextItemPrefab;
 
@@ -32,7 +34,7 @@ public class FillStore : MonoBehaviour
 
     public void RefreshList()
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in contentObject.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
@@ -49,7 +51,7 @@ public class FillStore : MonoBehaviour
                     if (i < DataManager.storeItems.Length - 1)
                     {
                         GameObject nextItem = Instantiate(nextItemPrefab) as GameObject;
-                        nextItem.transform.SetParent(transform, false);
+                        nextItem.transform.SetParent(contentObject.transform, false);
 
                         Image nextItemImage = nextItem.gameObject.GetComponent<Image>();
 
@@ -59,7 +61,7 @@ public class FillStore : MonoBehaviour
                 }
             }
             GameObject item = Instantiate(storeItemPrefab) as GameObject;
-            item.transform.SetParent(transform, false);
+            item.transform.SetParent(contentObject.transform, false);
 
             Image image = item.gameObject.GetComponent<Image>();
 

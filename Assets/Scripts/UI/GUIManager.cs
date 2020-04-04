@@ -84,11 +84,16 @@ public class GUIManager : MonoBehaviour
 
         if (update)
         {
-            GameObject notificationSprite = GameObject.Find("UpgradesNotificationSprite");
-            Image notificationImage = notificationSprite.GetComponent<Image>();
-            notificationImage.enabled = true;
-            PlayerPrefs.SetInt("notifications", 1);
-            Debug.Log("Blink");
+            // Don't update if we are in the notifications panel
+            TabControl tabControl = (TabControl)FindObjectOfType(typeof(TabControl));
+            if (tabControl && tabControl.currentView != TabControl.EView.UPGRADES)
+            {
+                GameObject notificationSprite = GameObject.Find("UpgradesNotificationSprite");
+                Image notificationImage = notificationSprite.GetComponent<Image>();
+                notificationImage.enabled = true;
+                PlayerPrefs.SetInt("notifications", 1);
+                Debug.Log("Blink");
+            }
         }
 
         availableUpdates = currentUpdates;
