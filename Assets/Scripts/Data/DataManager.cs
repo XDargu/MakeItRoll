@@ -20,8 +20,8 @@ public class DataManager
     public static float userSpeed = 0.2f;
 
     public static float goldenRollChance = 1.0f;
-    public static float goldenRollChanceBase = 6.0f;
-    public static float goldenRollMultiplier = 6.0f;
+    public static float goldenRollChanceBase = 1.0f;
+    public static float goldenRollMultiplier = 100.0f;
 
     public static float toiletCapacity = 1000f;
     public static float toiletMPS = 500f / 3600f;

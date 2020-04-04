@@ -145,7 +145,6 @@ public class MoveDown : MonoBehaviour {
 
     void UpdateSpeed()
     {
-        speed = 15.0f;
         speed += acceleration;
 
         if (!ignoreFriction)
